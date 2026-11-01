@@ -1,22 +1,25 @@
-import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
+import { useQuery } from "@tanstack/react-query";
 
-export const UseProducts = () => {
-  const getProducts = async () => {
-    const response = await axios.get(
-      "https://knowledgeshop.runasp.net/api/Products",
-      {
-        headers: {
-          "Accept-Language": "en",
-        },
-      }
-    );
+async function getProducts() {
+  const { data } = await axios.get(
+    "https://knowledgeshop.runasp.net/api/Products",
+    { headers: { "Accept-Language": "en" } }
+  );
 
-    return response.data.response.data;
-  };
+  const products = data.response?.data;
 
-return useQuery({
-  queryKey: ["product", id],
-  queryFn: getProductDetails,
-  staleTime: 1000 * 60 * 5,
-});}
+  if (!Array.isArray(products)) {
+    throw new Error("Unexpected products response.");
+  }
+
+  return products;
+}
+
+export function useProducts() {
+  return useQuery({
+    queryKey: ["products"],
+    queryFn: getProducts,
+    staleTime: 5 * 60 * 1000,
+  });
+}

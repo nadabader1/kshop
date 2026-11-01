@@ -1,27 +1,20 @@
-import React from "react";
-import { UseProducts } from "../../hooks/UseProducts";
-import CircularProgress from "@mui/material/CircularProgress";
-import Alert from "@mui/material/Alert";
+import { Alert, Box, CircularProgress, Typography } from "@mui/material";
+import { useProducts } from "../../hooks/UseProducts";
 import ProductCard from "./ProductCard";
-import Box from "@mui/material/Box";
-import Typography from "@mui/material/Typography";
 
 export default function Products() {
-  const { data, isPending, isError } = UseProducts();
+  const { data: products = [], isPending, isError } = useProducts();
 
-  if (isPending) return <CircularProgress />;
-
-  if (isError) {
-    return <Alert severity="error">Failed to load products.</Alert>;
-  }
-
-  console.log(data);
+  if (isPending) return <CircularProgress aria-label="Loading products" />;
+  if (isError) return <Alert severity="error">Failed to load products.</Alert>;
 
   return (
-    <Box>
-      <Typography variant="h5" component="h2" sx={{ mb: 4 }}>
-        Products
+    <Box component="section">
+      <Typography component="h2" variant="h5" sx={{ mb: 2 }}>
+        All Products
       </Typography>
+
+      {products.length === 0 && <Typography>No products yet.</Typography>}
 
       <Box
         sx={{
@@ -34,7 +27,7 @@ export default function Products() {
           },
         }}
       >
-        {data.map((product) => (
+        {products.map((product) => (
           <ProductCard key={product.id} product={product} />
         ))}
       </Box>

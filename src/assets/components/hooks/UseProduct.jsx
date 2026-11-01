@@ -1,19 +1,18 @@
 import axios from "axios";
-import React from "react";
+import { useQuery } from "@tanstack/react-query";
 
-export default function UseProduct() {
-  const getProductDetails = async (id) => {
-    const response = await axios.get(
-      `https://knowledgeshop.runasp.net/api/Products/${id}`,
-      {
-        headers: {
-          "Accept-Language": "en",
-        },
-      }
-    );
+export default function useProduct(id) {
+  return useQuery({
+    queryKey: ["product", id],
+    enabled: Boolean(id),
+    queryFn: async () => {
+      const { data } = await axios.get(
+        `https://knowledgeshop.runasp.net/api/Products/${id}`,
+        { headers: { "Accept-Language": "en" } }
+      );
 
-    return response.data.response;
-  };
-
-  return <div>UseProduct</div>;
+      return data.response ?? null;
+    },
+    staleTime: 5 * 60 * 1000,
+  });
 }

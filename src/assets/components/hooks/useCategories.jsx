@@ -1,45 +1,25 @@
-import Box from '@mui/material/Box';
-import Chip from '@mui/material/Chip';
-import CircularProgress from '@mui/material/CircularProgress';
-import Typography from '@mui/material/Typography';
-import Alert from '@mui/material/Alert';
-import { useCategories } from '../../hooks/UseCategories';
+import axios from "axios";
+import { useQuery } from "@tanstack/react-query";
 
-export default function Categories() {
-  const {
-    data: categories = [],
-    isLoading,
-    isError,
-    error,
-  } = useCategories();
-
-  if (isLoading) {
-    return <CircularProgress />;
-  }
-
-  if (isError) {
-    return (
-      <Alert severity="error">
-        {error.message || 'Failed to load categories'}
-      </Alert>
-    );
-  }
-
-  return (
-    <Box>
-      <Typography variant="h5" component="h2" sx={{ mb: 2 }}>
-        Categories
-      </Typography>
-
-      <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap' }}>
-        {categories.map((category) => (
-          <Chip
-            key={category.id}
-            label={category.name}
-            clickable
-          />
-        ))}
-      </Box>
-    </Box>
+async function getCategories() {
+  const { data } = await axios.get(
+    "https://knowledgeshop.runasp.net/api/Categories",
+    { headers: { "Accept-Language": "en" } }
   );
+
+  const categories = data.response?.data ?? data.response;
+
+  if (!Array.isArray(categories)) {
+    throw new Error("Unexpected categories response.");
+  }
+
+  return categories;
+}
+
+export function useCategories() {
+  return useQuery({
+    queryKey: ["categories"],
+    queryFn: getCategories,
+    staleTime: 5 * 60 * 1000,
+  });
 }

@@ -1,32 +1,32 @@
-import CardActionArea from "@mui/material/CardActionArea";
-import CardContent from "@mui/material/CardContent";
-import Card from "@mui/material/Card";
-import Typography from "@mui/material/Typography";
-import Rating from "@mui/material/Rating";
-import CardMedia from "@mui/material/CardMedia";
-import { Link } from "react-router";
+import {
+  Card,
+  CardActionArea,
+  CardContent,
+  CardMedia,
+  Rating,
+  Typography,
+} from "@mui/material";
+import { Link } from "react-router-dom";
 
 export default function ProductCard({ product }) {
+  const rating = Number(product.rating ?? product.Rating ?? 0);
+
   return (
     <Card>
-      <CardActionArea
-        component={Link}
-        to={`/products/${product.id}`}
-      >
-        <CardMedia
-          component="img"
-          image={product.image}
-          alt={product.name}
-        />
+      <CardActionArea component={Link} to={`/products/${product.id}`}>
+        {product.image && (
+          <CardMedia
+            component="img"
+            image={product.image}
+            alt={product.name}
+            sx={{ height: 200, objectFit: "contain" }}
+          />
+        )}
 
         <CardContent>
-          <Typography>{product.name}</Typography>
-
-          <Rating value={product.Rating} readOnly />
-
-          <Typography variant="h6" color="primary">
-            ${product.price}
-          </Typography>
+          <Typography variant="h6">{product.name}</Typography>
+          <Rating value={rating} precision={0.5} readOnly />
+          <Typography color="primary">${product.price}</Typography>
         </CardContent>
       </CardActionArea>
     </Card>
