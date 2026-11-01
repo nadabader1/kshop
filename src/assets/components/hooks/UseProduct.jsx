@@ -1,14 +1,14 @@
-import axios from "axios";
 import { useQuery } from "@tanstack/react-query";
+import { catalogApi } from "./catalogApi.js";
 
 export default function useProduct(id) {
   return useQuery({
     queryKey: ["product", id],
     enabled: Boolean(id),
-    queryFn: async () => {
-      const { data } = await axios.get(
-        `https://knowledgeshop.runasp.net/api/Products/${id}`,
-        { headers: { "Accept-Language": "en" } }
+    queryFn: async ({ signal }) => {
+      const { data } = await catalogApi.get(
+        `Products/${encodeURIComponent(id)}`,
+        { signal }
       );
 
       return data.response ?? null;

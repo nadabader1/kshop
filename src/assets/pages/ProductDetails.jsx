@@ -1,14 +1,22 @@
 import { Alert, Box, CircularProgress, Typography } from "@mui/material";
 import { Link, useParams } from "react-router-dom";
-import useProduct from "../../hooks/UseProduct";
+import useProduct from "../components/hooks/UseProduct.jsx";
 
 export default function ProductDetails() {
   const { id } = useParams();
   const { data: product, isPending, isError } = useProduct(id);
 
-  if (isPending) return <CircularProgress aria-label="Loading product" />;
-  if (isError) return <Alert severity="error">Failed to load product.</Alert>;
-  if (!product) return <Alert severity="info">Product not found.</Alert>;
+  if (isPending) {
+    return <CircularProgress aria-label="Loading product" />;
+  }
+
+  if (isError) {
+    return <Alert severity="error">Failed to load product.</Alert>;
+  }
+
+  if (!product) {
+    return <Alert severity="info">Product not found.</Alert>;
+  }
 
   return (
     <Box component="main" sx={{ maxWidth: 800, mx: "auto", p: 3 }}>
@@ -27,7 +35,7 @@ export default function ProductDetails() {
         />
       )}
 
-      <Typography sx={{ mb: 2 }}>{product.description}</Typography>
+      <Typography>{product.description}</Typography>
       <Typography variant="h6">${product.price}</Typography>
     </Box>
   );

@@ -1,15 +1,20 @@
 import { Alert, Box, CircularProgress, Typography } from "@mui/material";
-import { useProducts } from "../../hooks/UseProducts";
-import ProductCard from "./ProductCard";
+import { useProducts } from "../hooks/UseProducts.jsx";
+import ProductCard from "./ProductCard.jsx";
 
 export default function Products() {
   const { data: products = [], isPending, isError } = useProducts();
 
-  if (isPending) return <CircularProgress aria-label="Loading products" />;
-  if (isError) return <Alert severity="error">Failed to load products.</Alert>;
+  if (isPending) {
+    return <CircularProgress aria-label="Loading products" />;
+  }
+
+  if (isError) {
+    return <Alert severity="error">Failed to load products.</Alert>;
+  }
 
   return (
-    <Box component="section">
+    <Box component="section" sx={{ my: 4 }}>
       <Typography component="h2" variant="h5" sx={{ mb: 2 }}>
         All Products
       </Typography>
