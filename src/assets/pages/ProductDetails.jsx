@@ -1,3 +1,4 @@
+
 import {
   Alert,
   Box,
@@ -8,21 +9,30 @@ import {
   Rating,
   Typography,
 } from "@mui/material";
+
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { Slide, toast } from "react-toastify";
 
 import useProduct from "../components/hooks/UseProduct.jsx";
 import ReviewItem from "../components/ReviewItem";
-import useAddToCart from "../hooks/useAddToCart.jsx";
-import { useAuthStore } from "../store/authStore";
+import useAddToCart from "../components/hooks/useAddToCart.jsx";
 
 export default function ProductDetails() {
   const { id } = useParams();
   const navigate = useNavigate();
-  const token = useAuthStore((state) => state.token);
 
-  const { data: product, isPending, isError } = useProduct(id);
-  const { mutate: addToCart, isPending: addToCartPending } = useAddToCart();
+  const token = localStorage.getItem("token");
+
+  const {
+    data: product,
+    isPending,
+    isError,
+  } = useProduct(id);
+
+  const {
+    mutate: addToCart,
+    isPending: addToCartPending,
+  } = useAddToCart();
 
   if (isPending) {
     return <CircularProgress aria-label="Loading product" />;
@@ -46,17 +56,15 @@ export default function ProductDetails() {
 
     addToCart(product.id, {
       onSuccess: () => {
-        toast.success("🦄 Wow so easy!", {
+        toast.success("Product added to cart successfully!", {
           position: "top-right",
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: false,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
+          autoClose: 3000,
           theme: "dark",
           transition: Slide,
         });
+      },
+      onError: () => {
+        toast.error("Failed to add product to cart.");
       },
     });
   };
@@ -74,7 +82,13 @@ export default function ProductDetails() {
           component="img"
           src={product.image}
           alt={product.name}
-          sx={{ display: "block", width: "100%", maxWidth: 360, mb: 2 }}
+          sx={{
+            display: "block",
+            width: "100%",
+            maxWidth: 360,
+            mb: 2,
+            objectFit: "contain",
+          }}
         />
       )}
 
@@ -89,7 +103,9 @@ export default function ProductDetails() {
         color={inStock ? "success" : "error"}
       />
 
-      <Typography sx={{ my: 2 }}>{product.description}</Typography>
+      <Typography sx={{ my: 2 }}>
+        {product.description}
+      </Typography>
 
       <Button
         variant="contained"

@@ -1,18 +1,23 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import authAxiosInstance from "../api/authAxiosInstance";
+import authAxiosInstance from "../../../api/authAxiosInstance.js";
 
 export default function useRemoveItemCart() {
   const queryClient = useQueryClient();
 
-  const removeItemCart = async (productId) => {
-    const response = await authAxiosInstance.delete(`Carts/${productId}`);
+  const removeItem = async (itemId) => {
+    const response = await authAxiosInstance.delete(
+      `Carts/${encodeURIComponent(itemId)}`
+    );
+
     return response.data;
   };
 
   return useMutation({
-    mutationFn: removeItemCart,
+    mutationFn: removeItem,
     onSuccess: () => {
-      return queryClient.invalidateQueries({ queryKey: ["cart"] });
+      queryClient.invalidateQueries({
+        queryKey: ["cart"],
+      });
     },
   });
 }

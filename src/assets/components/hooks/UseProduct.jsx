@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import axiosInstance from "../../api/axiosInstance.js";
+import axiosInstance from "../../../api/axiosInstance.js";
 
 export default function useProduct(id) {
   const getProductDetails = async ({ signal }) => {

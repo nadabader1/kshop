@@ -1,3 +1,4 @@
+
 import { createBrowserRouter, Navigate } from "react-router-dom";
 
 import MainLayout from "./layouts/MainLayout.jsx";
@@ -6,6 +7,8 @@ import AuthLayout from "./layouts/AuthLayout.jsx";
 import Home from "./assets/Home/Home.jsx";
 import Products from "./assets/components/Products/Products.jsx";
 import ProductDetails from "./assets/pages/ProductDetails.jsx";
+import Cart from "./assets/pages/Cart/Cart.jsx";
+
 import Login from "./assets/Login/Login.jsx";
 import Register from "./assets/Register/Register.jsx";
 
@@ -29,6 +32,10 @@ const router = createBrowserRouter([
       {
         path: "products/:id",
         element: <ProductDetails />,
+      },
+      {
+        path: "cart",
+        element: <Cart />,
       },
     ],
   },

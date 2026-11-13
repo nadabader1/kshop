@@ -1,18 +1,19 @@
+
 import { useQuery } from "@tanstack/react-query";
-import authAxiosInstance from "../api/authAxiosInstance.js";
-import { useAuthStore } from "../store/authStore";
+import authAxiosInstance from "../../../api/authAxiosInstance.js";
 
 export default function useCart() {
-  const token = useAuthStore((state) => state.token);
+  const getCart = async ({ signal }) => {
+    const response = await authAxiosInstance.get("Carts", {
+      signal,
+    });
 
-  const getCart = async () => {
-    const response = await authAxiosInstance.get("Carts");
-    return response.data;
+    return response.data.response ?? response.data;
   };
 
   return useQuery({
     queryKey: ["cart"],
     queryFn: getCart,
-    enabled: !!token,
+    enabled: Boolean(localStorage.getItem("token")),
   });
 }
